@@ -1,5 +1,5 @@
 import { revalidateRedirects } from '@hooks/revalidateRedirects'
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
@@ -312,8 +312,10 @@ export default buildConfig({
     'https://payloadcms.com',
     'https://discord.com/api',
   ].filter(Boolean),
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
+  db: sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URI || '',
+    }
   }),
   defaultDepth: 1,
   editor: lexicalEditor({
