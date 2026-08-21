@@ -59,13 +59,19 @@ const toSnakeCase = (input: string): string => {
 }
 
 /**
- * Returns a shortened, collision-free replacement for `defaultName`, or an empty string when the
- * default already fits. An empty string is falsy, which is how `createTableName` is told to keep
- * its own name.
+ * Returns a name for `defaultName` — the default itself when it already fits, otherwise a
+ * shortened, collision-free replacement.
+ *
+ * This must always return a non-empty string. `createTableName` wraps a custom name for a
+ * versioned table as `_<name>_v`, and it does that *before* falling back to its own name, so
+ * returning `''` there yields `__v` for every block and array inside a version table. They then
+ * all collide, get disambiguated into `__v_2`, `__v_3`, … and the block index that disambiguation
+ * writes onto the shared block objects leaks into non-versioned queries, which fail with
+ * `Cannot read properties of undefined (reading 'referencedTable')`.
  */
 const shortenIfNeeded = (defaultName: string): string => {
   if (defaultName.length <= MAX_CUSTOM_LENGTH) {
-    return ''
+    return defaultName
   }
 
   // Hashing the full default name keeps the result stable across runs and unique across fields

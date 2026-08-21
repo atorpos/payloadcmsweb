@@ -908,19 +908,58 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`case_studies_rels_pages_id_idx\` ON \`case_studies_rels\` (\`pages_id\`);`)
   await db.run(sql`CREATE INDEX \`case_studies_rels_posts_id_idx\` ON \`case_studies_rels\` (\`posts_id\`);`)
   await db.run(sql`CREATE INDEX \`case_studies_rels_case_studies_id_idx\` ON \`case_studies_rels\` (\`case_studies_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v\` (
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_callout_v_callout_fields_images_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`platform\` text,
-  	\`url\` text,
+  	\`image_id\` integer,
   	\`_uuid\` text,
-  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_partners_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_callout_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_order_idx\` ON \`__v\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_parent_id_idx\` ON \`__v\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_2\` (
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_callout_v_callout_fields_images_v_order_idx\` ON \`___case_studies_v_blocks_callout_v_callout_fields_images_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_callout_v_callout_fields_images_v_parent_id_idx\` ON \`___case_studies_v_blocks_callout_v_callout_fields_images_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_callout_v_callout_fields_images_idx\` ON \`___case_studies_v_blocks_callout_v_callout_fields_images_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_callout_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`callout_fields_settings_theme\` text,
+  	\`callout_fields_settings_background\` text,
+  	\`callout_fields_rich_text\` text,
+  	\`callout_fields_logo_id\` integer,
+  	\`callout_fields_author\` text,
+  	\`callout_fields_role\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`callout_fields_logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_callout_v_order_idx\` ON \`__case_studies_v_blocks_callout_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_callout_v_parent_id_idx\` ON \`__case_studies_v_blocks_callout_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_callout_v_path_idx\` ON \`__case_studies_v_blocks_callout_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_callout_v_callout_fields_callout_idx\` ON \`__case_studies_v_blocks_callout_v\` (\`callout_fields_logo_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_cta_v_cta_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`type\` text DEFAULT 'link',
+  	\`npm_cta_label\` text,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_cta_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_cta_v_cta_fields_links_v_order_idx\` ON \`___case_studies_v_blocks_cta_v_cta_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_cta_v_cta_fields_links_v_parent_id_idx\` ON \`___case_studies_v_blocks_cta_v_cta_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_cta_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -943,11 +982,43 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_2_order_idx\` ON \`__v_2\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_2_parent_id_idx\` ON \`__v_2\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_2_path_idx\` ON \`__v_2\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_2_cta_fields_cta_fields_banner_image_idx\` ON \`__v_2\` (\`cta_fields_banner_image_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_3\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_cta_v_order_idx\` ON \`__case_studies_v_blocks_cta_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_cta_v_parent_id_idx\` ON \`__case_studies_v_blocks_cta_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_cta_v_path_idx\` ON \`__case_studies_v_blocks_cta_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_cta_v_cta_fields_cta_fields_bann_idx\` ON \`__case_studies_v_blocks_cta_v\` (\`cta_fields_banner_image_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_card_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v_order_idx\` ON \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v_parent_id_idx\` ON \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_card_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v_order_idx\` ON \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v_parent_id_idx\` ON \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_card_grid_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -961,10 +1032,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_3_order_idx\` ON \`__v_3\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_3_parent_id_idx\` ON \`__v_3\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_3_path_idx\` ON \`__v_3\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_4\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_card_grid_v_order_idx\` ON \`__case_studies_v_blocks_card_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_card_grid_v_parent_id_idx\` ON \`__case_studies_v_blocks_card_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_card_grid_v_path_idx\` ON \`__case_studies_v_blocks_card_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`rich_text\` text,
+  	\`case_study_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`case_study_id\`) REFERENCES \`case_studies\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_case_study_cards_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v_order_idx\` ON \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v_parent_id_idx\` ON \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4_idx\` ON \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v\` (\`case_study_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_case_study_cards_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -977,10 +1062,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_4_order_idx\` ON \`__v_4\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_4_parent_id_idx\` ON \`__v_4\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_4_path_idx\` ON \`__v_4\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_5\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_cards_v_order_idx\` ON \`__case_studies_v_blocks_case_study_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_cards_v_parent_id_idx\` ON \`__case_studies_v_blocks_case_study_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_cards_v_path_idx\` ON \`__case_studies_v_blocks_case_study_cards_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_case_studies_highlight_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -993,10 +1078,42 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_5_order_idx\` ON \`__v_5\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_5_parent_id_idx\` ON \`__v_5\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_5_path_idx\` ON \`__v_5\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_6\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_studies_highlight_v_order_idx\` ON \`__case_studies_v_blocks_case_studies_highlight_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_studies_highlight_v_parent_id_idx\` ON \`__case_studies_v_blocks_case_studies_highlight_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_studies_highlight_v_path_idx\` ON \`__case_studies_v_blocks_case_studies_highlight_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v_order_idx\` ON \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v_parent_id_idx\` ON \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_case_study_parallax_v_case_446_idx\` ON \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`quote\` text,
+  	\`author\` text,
+  	\`logo_id\` integer,
+  	\`tab_label\` text,
+  	\`case_study_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`case_study_id\`) REFERENCES \`case_studies\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_case_study_parallax_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v_order_idx\` ON \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v_parent_id_idx\` ON \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_parallax_v_case__f50_idx\` ON \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\` (\`logo_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_case_study_parallax_v_case__f_1_idx\` ON \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\` (\`case_study_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_case_study_parallax_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1008,10 +1125,57 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_6_order_idx\` ON \`__v_6\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_6_parent_id_idx\` ON \`__v_6\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_6_path_idx\` ON \`__v_6\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_7\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_parallax_v_order_idx\` ON \`__case_studies_v_blocks_case_study_parallax_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_parallax_v_parent_id_idx\` ON \`__case_studies_v_blocks_case_study_parallax_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_case_study_parallax_v_path_idx\` ON \`__case_studies_v_blocks_case_study_parallax_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_code_feature_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v_order_idx\` ON \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v_parent_id_idx\` ON \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`row\` numeric,
+  	\`label\` text,
+  	\`feature\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v_order_idx\` ON \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v_parent_id_idx\` ON \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`language\` text DEFAULT 'none',
+  	\`label\` text,
+  	\`code\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_code_feature_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v_order_idx\` ON \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v_parent_id_idx\` ON \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_code_feature_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1027,10 +1191,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_7_order_idx\` ON \`__v_7\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_7_parent_id_idx\` ON \`__v_7\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_7_path_idx\` ON \`__v_7\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_8\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_feature_v_order_idx\` ON \`__case_studies_v_blocks_code_feature_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_feature_v_parent_id_idx\` ON \`__case_studies_v_blocks_code_feature_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_feature_v_path_idx\` ON \`__case_studies_v_blocks_code_feature_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_content_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1048,10 +1212,36 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_8_order_idx\` ON \`__v_8\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_8_parent_id_idx\` ON \`__v_8\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_8_path_idx\` ON \`__v_8\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_9\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_v_order_idx\` ON \`__case_studies_v_blocks_content_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_v_parent_id_idx\` ON \`__case_studies_v_blocks_content_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_v_path_idx\` ON \`__case_studies_v_blocks_content_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_content_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v_order_idx\` ON \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v_parent_id_idx\` ON \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_content_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v_order_idx\` ON \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v_parent_id_idx\` ON \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_content_grid_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1066,10 +1256,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_9_order_idx\` ON \`__v_9\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_9_parent_id_idx\` ON \`__v_9\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_9_path_idx\` ON \`__v_9\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_10\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_grid_v_order_idx\` ON \`__case_studies_v_blocks_content_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_grid_v_parent_id_idx\` ON \`__case_studies_v_blocks_content_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_content_grid_v_path_idx\` ON \`__case_studies_v_blocks_content_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_form_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1084,11 +1274,27 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_10_order_idx\` ON \`__v_10\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_10_parent_id_idx\` ON \`__v_10\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_10_path_idx\` ON \`__v_10\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_10_form_fields_form_fields_form_idx\` ON \`__v_10\` (\`form_fields_form_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_11\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_form_v_order_idx\` ON \`__case_studies_v_blocks_form_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_form_v_parent_id_idx\` ON \`__case_studies_v_blocks_form_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_form_v_path_idx\` ON \`__case_studies_v_blocks_form_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_form_v_form_fields_form_fields_f_idx\` ON \`__case_studies_v_blocks_form_v\` (\`form_fields_form_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`description\` text,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_hover_cards_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v_order_idx\` ON \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v_parent_id_idx\` ON \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_hover_cards_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1102,10 +1308,31 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_11_order_idx\` ON \`__v_11\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_11_parent_id_idx\` ON \`__v_11\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_11_path_idx\` ON \`__v_11\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_12\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_cards_v_order_idx\` ON \`__case_studies_v_blocks_hover_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_cards_v_parent_id_idx\` ON \`__case_studies_v_blocks_hover_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_cards_v_path_idx\` ON \`__case_studies_v_blocks_hover_cards_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`text\` text,
+  	\`media_top_id\` integer,
+  	\`media_bottom_id\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_top_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`media_bottom_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_hover_highlights_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v_order_idx\` ON \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v_parent_id_idx\` ON \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff1_idx\` ON \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\` (\`media_top_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_hover_highlights_v_hover_hi_f_1_idx\` ON \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\` (\`media_bottom_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_hover_highlights_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1124,10 +1351,25 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_12_order_idx\` ON \`__v_12\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_12_parent_id_idx\` ON \`__v_12\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_12_path_idx\` ON \`__v_12\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_13\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_highlights_v_order_idx\` ON \`__case_studies_v_blocks_hover_highlights_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_highlights_v_parent_id_idx\` ON \`__case_studies_v_blocks_hover_highlights_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_hover_highlights_v_path_idx\` ON \`__case_studies_v_blocks_hover_highlights_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_link_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v_order_idx\` ON \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v_parent_id_idx\` ON \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_link_grid_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1139,10 +1381,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_13_order_idx\` ON \`__v_13\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_13_parent_id_idx\` ON \`__v_13\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_13_path_idx\` ON \`__v_13\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_14\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_link_grid_v_order_idx\` ON \`__case_studies_v_blocks_link_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_link_grid_v_parent_id_idx\` ON \`__case_studies_v_blocks_link_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_link_grid_v_path_idx\` ON \`__case_studies_v_blocks_link_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`logo_media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_logo_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v_order_idx\` ON \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v_parent_id_idx\` ON \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_lo_idx\` ON \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`logo_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_logo_grid_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1161,10 +1416,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_14_order_idx\` ON \`__v_14\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_14_parent_id_idx\` ON \`__v_14\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_14_path_idx\` ON \`__v_14\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_15\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_logo_grid_v_order_idx\` ON \`__case_studies_v_blocks_logo_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_logo_grid_v_parent_id_idx\` ON \`__case_studies_v_blocks_logo_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_logo_grid_v_path_idx\` ON \`__case_studies_v_blocks_logo_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_media_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1180,11 +1435,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_15_order_idx\` ON \`__v_15\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_15_parent_id_idx\` ON \`__v_15\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_15_path_idx\` ON \`__v_15\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_15_media_block_fields_media_block_fields_media_idx\` ON \`__v_15\` (\`media_block_fields_media_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_16\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_block_v_order_idx\` ON \`__case_studies_v_blocks_media_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_block_v_parent_id_idx\` ON \`__case_studies_v_blocks_media_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_block_v_path_idx\` ON \`__case_studies_v_blocks_media_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_block_v_media_block_fields_idx\` ON \`__case_studies_v_blocks_media_block_v\` (\`media_block_fields_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_media_content_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v_order_idx\` ON \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v_parent_id_idx\` ON \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_v_media_conte_da2_idx\` ON \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_media_content_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1205,10 +1473,33 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_16_order_idx\` ON \`__v_16\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_16_parent_id_idx\` ON \`__v_16\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_16_path_idx\` ON \`__v_16\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_17\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_v_order_idx\` ON \`__case_studies_v_blocks_media_content_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_v_parent_id_idx\` ON \`__case_studies_v_blocks_media_content_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_v_path_idx\` ON \`__case_studies_v_blocks_media_content_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`position\` text DEFAULT 'normal',
+  	\`background\` text DEFAULT 'none',
+  	\`media_label\` text,
+  	\`media_description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_media_content_accordion_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v_order_idx\` ON \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v_parent_id_idx\` ON \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_media_content_accordion_v_m_c12_idx\` ON \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_media_content_accordion_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1223,10 +1514,44 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_17_order_idx\` ON \`__v_17\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_17_parent_id_idx\` ON \`__v_17\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_17_path_idx\` ON \`__v_17\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_18\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_accordion_v_order_idx\` ON \`__case_studies_v_blocks_media_content_accordion_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_accordion_v_parent_id_idx\` ON \`__case_studies_v_blocks_media_content_accordion_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_content_accordion_v_path_idx\` ON \`__case_studies_v_blocks_media_content_accordion_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`icon\` text,
+  	\`feature\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v_order_idx\` ON \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v_parent_id_idx\` ON \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`name\` text,
+  	\`has_price\` integer,
+  	\`enable_create_payload\` integer,
+  	\`price\` text,
+  	\`title\` text,
+  	\`description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_pricing_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v_order_idx\` ON \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v_parent_id_idx\` ON \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_pricing_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1239,10 +1564,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_18_order_idx\` ON \`__v_18\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_18_parent_id_idx\` ON \`__v_18\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_18_path_idx\` ON \`__v_18\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_19\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_pricing_v_order_idx\` ON \`__case_studies_v_blocks_pricing_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_pricing_v_parent_id_idx\` ON \`__case_studies_v_blocks_pricing_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_pricing_v_path_idx\` ON \`__case_studies_v_blocks_pricing_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_reusable_content_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1257,11 +1582,49 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_19_order_idx\` ON \`__v_19\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_19_parent_id_idx\` ON \`__v_19\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_19_path_idx\` ON \`__v_19\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_19_reusable_content_block_fields_reusable_content_bl_idx\` ON \`__v_19\` (\`reusable_content_block_fields_reusable_content_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_20\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_reusable_content_block_v_order_idx\` ON \`__case_studies_v_blocks_reusable_content_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_reusable_content_block_v_parent_id_idx\` ON \`__case_studies_v_blocks_reusable_content_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_reusable_content_block_v_path_idx\` ON \`__case_studies_v_blocks_reusable_content_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_reusable_content_block_v_reusabl_idx\` ON \`__case_studies_v_blocks_reusable_content_block_v\` (\`reusable_content_block_fields_reusable_content_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_slider_v_slider_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`link_appearance\` text DEFAULT 'default',
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_slider_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_slider_v_slider_fields_links_v_order_idx\` ON \`___case_studies_v_blocks_slider_v_slider_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_slider_v_slider_fields_links_v_parent_id_idx\` ON \`___case_studies_v_blocks_slider_v_slider_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`quote\` text,
+  	\`author\` text,
+  	\`role\` text,
+  	\`logo_id\` integer,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_slider_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v_order_idx\` ON \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v_parent_id_idx\` ON \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_slider_v_slider_fields_quote_sl_idx\` ON \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`logo_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_slider_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1274,10 +1637,25 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_20_order_idx\` ON \`__v_20\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_20_parent_id_idx\` ON \`__v_20\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_20_path_idx\` ON \`__v_20\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_21\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_slider_v_order_idx\` ON \`__case_studies_v_blocks_slider_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_slider_v_parent_id_idx\` ON \`__case_studies_v_blocks_slider_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_slider_v_path_idx\` ON \`__case_studies_v_blocks_slider_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_statement_v_statement_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_statement_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_statement_v_statement_fields_links_v_order_idx\` ON \`___case_studies_v_blocks_statement_v_statement_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_statement_v_statement_fields_links_v_parent_id_idx\` ON \`___case_studies_v_blocks_statement_v_statement_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_statement_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1297,11 +1675,25 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_21_order_idx\` ON \`__v_21\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_21_parent_id_idx\` ON \`__v_21\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_21_path_idx\` ON \`__v_21\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_21_statement_fields_statement_fields_media_idx\` ON \`__v_21\` (\`statement_fields_media_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_22\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_statement_v_order_idx\` ON \`__case_studies_v_blocks_statement_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_statement_v_parent_id_idx\` ON \`__case_studies_v_blocks_statement_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_statement_v_path_idx\` ON \`__case_studies_v_blocks_statement_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_statement_v_statement_fields_sta_idx\` ON \`__case_studies_v_blocks_statement_v\` (\`statement_fields_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_steps_v_steps_fields_steps_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_steps_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_steps_v_steps_fields_steps_v_order_idx\` ON \`___case_studies_v_blocks_steps_v_steps_fields_steps_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_steps_v_steps_fields_steps_v_parent_id_idx\` ON \`___case_studies_v_blocks_steps_v_steps_fields_steps_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_steps_v_steps_fields_steps_v_me_idx\` ON \`___case_studies_v_blocks_steps_v_steps_fields_steps_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_steps_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1313,10 +1705,51 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_22_order_idx\` ON \`__v_22\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_22_parent_id_idx\` ON \`__v_22\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_22_path_idx\` ON \`__v_22\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_23\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_steps_v_order_idx\` ON \`__case_studies_v_blocks_steps_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_steps_v_parent_id_idx\` ON \`__case_studies_v_blocks_steps_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_steps_v_path_idx\` ON \`__case_studies_v_blocks_steps_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`row\` numeric,
+  	\`label\` text,
+  	\`feature\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v_order_idx\` ON \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v_parent_id_idx\` ON \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`rich_text\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`type\` text,
+  	\`code\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_sticky_highlights_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v_order_idx\` ON \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v_parent_id_idx\` ON \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b5_idx\` ON \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_sticky_highlights_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1328,10 +1761,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_23_order_idx\` ON \`__v_23\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_23_parent_id_idx\` ON \`__v_23\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_23_path_idx\` ON \`__v_23\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_25\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_sticky_highlights_v_order_idx\` ON \`__case_studies_v_blocks_sticky_highlights_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_sticky_highlights_v_parent_id_idx\` ON \`__case_studies_v_blocks_sticky_highlights_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_sticky_highlights_v_path_idx\` ON \`__case_studies_v_blocks_sticky_highlights_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_code_example_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1342,10 +1775,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_25_order_idx\` ON \`__v_25\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_25_parent_id_idx\` ON \`__v_25\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_25_path_idx\` ON \`__v_25\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_26\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_example_block_v_order_idx\` ON \`__case_studies_v_blocks_code_example_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_example_block_v_parent_id_idx\` ON \`__case_studies_v_blocks_code_example_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_code_example_block_v_path_idx\` ON \`__case_studies_v_blocks_code_example_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_media_example_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1357,11 +1790,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_26_order_idx\` ON \`__v_26\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_26_parent_id_idx\` ON \`__v_26\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_26_path_idx\` ON \`__v_26\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_26_media_idx\` ON \`__v_26\` (\`media_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_24\` (
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_example_block_v_order_idx\` ON \`__case_studies_v_blocks_media_example_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_example_block_v_parent_id_idx\` ON \`__case_studies_v_blocks_media_example_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_example_block_v_path_idx\` ON \`__case_studies_v_blocks_media_example_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_media_example_block_v_media_idx\` ON \`__case_studies_v_blocks_media_example_block_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___case_studies_v_blocks_example_tabs_v_tabs_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`label\` text,
+  	\`content\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__case_studies_v_blocks_example_tabs_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_example_tabs_v_tabs_v_order_idx\` ON \`___case_studies_v_blocks_example_tabs_v_tabs_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___case_studies_v_blocks_example_tabs_v_tabs_v_parent_id_idx\` ON \`___case_studies_v_blocks_example_tabs_v_tabs_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__case_studies_v_blocks_example_tabs_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -1372,9 +1817,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_case_studies_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_24_order_idx\` ON \`__v_24\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_24_parent_id_idx\` ON \`__v_24\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_24_path_idx\` ON \`__v_24\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_example_tabs_v_order_idx\` ON \`__case_studies_v_blocks_example_tabs_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_example_tabs_v_parent_id_idx\` ON \`__case_studies_v_blocks_example_tabs_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__case_studies_v_blocks_example_tabs_v_path_idx\` ON \`__case_studies_v_blocks_example_tabs_v\` (\`_path\`);`)
   await db.run(sql`CREATE TABLE \`_case_studies_v\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`parent_id\` integer,
@@ -2635,7 +3080,1035 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`pages_rels_posts_id_idx\` ON \`pages_rels\` (\`posts_id\`);`)
   await db.run(sql`CREATE INDEX \`pages_rels_case_studies_id_idx\` ON \`pages_rels\` (\`case_studies_id\`);`)
   await db.run(sql`CREATE INDEX \`pages_rels_media_id_idx\` ON \`pages_rels\` (\`media_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_28\` (
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_breadcrumbs_bar_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_breadcrumbs_bar_links_v_order_idx\` ON \`__pages_v_version_hero_breadcrumbs_bar_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_breadcrumbs_bar_links_v_parent_id_idx\` ON \`__pages_v_version_hero_breadcrumbs_bar_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_livestream_guests_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`name\` text,
+  	\`link\` text,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_livestream_guests_v_order_idx\` ON \`__pages_v_version_hero_livestream_guests_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_livestream_guests_v_parent_id_idx\` ON \`__pages_v_version_hero_livestream_guests_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_livestream_guests_v_image_idx\` ON \`__pages_v_version_hero_livestream_guests_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_primary_buttons_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`type\` text DEFAULT 'link',
+  	\`npm_cta_label\` text,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_primary_buttons_v_order_idx\` ON \`__pages_v_version_hero_primary_buttons_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_primary_buttons_v_parent_id_idx\` ON \`__pages_v_version_hero_primary_buttons_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`link_appearance\` text DEFAULT 'default',
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_links_v_order_idx\` ON \`__pages_v_version_hero_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_links_v_parent_id_idx\` ON \`__pages_v_version_hero_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_link_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`link_appearance\` text DEFAULT 'default',
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_v_order_idx\` ON \`__pages_v_blocks_link_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_v_parent_id_idx\` ON \`__pages_v_blocks_link_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_v_path_idx\` ON \`__pages_v_blocks_link_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_command_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`command\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_command_v_order_idx\` ON \`__pages_v_blocks_command_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_command_v_parent_id_idx\` ON \`__pages_v_blocks_command_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_command_v_path_idx\` ON \`__pages_v_blocks_command_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_secondary_buttons_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_secondary_buttons_v_order_idx\` ON \`__pages_v_version_hero_secondary_buttons_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_secondary_buttons_v_parent_id_idx\` ON \`__pages_v_version_hero_secondary_buttons_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_images_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_images_v_order_idx\` ON \`__pages_v_version_hero_images_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_images_v_parent_id_idx\` ON \`__pages_v_version_hero_images_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_images_v_image_idx\` ON \`__pages_v_version_hero_images_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_version_hero_logos_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`logo_media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_logos_v_order_idx\` ON \`__pages_v_version_hero_logos_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_logos_v_parent_id_idx\` ON \`__pages_v_version_hero_logos_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_version_hero_logos_v_logo_media_idx\` ON \`__pages_v_version_hero_logos_v\` (\`logo_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_callout_v_callout_fields_images_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_callout_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_callout_v_callout_fields_images_v_order_idx\` ON \`___pages_v_blocks_callout_v_callout_fields_images_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_callout_v_callout_fields_images_v_parent_id_idx\` ON \`___pages_v_blocks_callout_v_callout_fields_images_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_callout_v_callout_fields_images_v_imag_idx\` ON \`___pages_v_blocks_callout_v_callout_fields_images_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_callout_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`callout_fields_settings_theme\` text,
+  	\`callout_fields_settings_background\` text,
+  	\`callout_fields_rich_text\` text,
+  	\`callout_fields_logo_id\` integer,
+  	\`callout_fields_author\` text,
+  	\`callout_fields_role\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`callout_fields_logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_callout_v_order_idx\` ON \`__pages_v_blocks_callout_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_callout_v_parent_id_idx\` ON \`__pages_v_blocks_callout_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_callout_v_path_idx\` ON \`__pages_v_blocks_callout_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_callout_v_callout_fields_callout_fields_idx\` ON \`__pages_v_blocks_callout_v\` (\`callout_fields_logo_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_cta_v_cta_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`type\` text DEFAULT 'link',
+  	\`npm_cta_label\` text,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_cta_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_cta_v_cta_fields_links_v_order_idx\` ON \`___pages_v_blocks_cta_v_cta_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_cta_v_cta_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_cta_v_cta_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_cta_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`cta_fields_settings_theme\` text,
+  	\`cta_fields_settings_background\` text,
+  	\`cta_fields_style\` text DEFAULT 'buttons',
+  	\`cta_fields_rich_text\` text,
+  	\`cta_fields_command_line\` text,
+  	\`cta_fields_banner_link_type\` text DEFAULT 'reference',
+  	\`cta_fields_banner_link_new_tab\` integer,
+  	\`cta_fields_banner_link_url\` text,
+  	\`cta_fields_banner_link_label\` text,
+  	\`cta_fields_banner_link_custom_id\` text,
+  	\`cta_fields_banner_image_id\` integer,
+  	\`cta_fields_gradient_background\` integer,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`cta_fields_banner_image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_cta_v_order_idx\` ON \`__pages_v_blocks_cta_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_cta_v_parent_id_idx\` ON \`__pages_v_blocks_cta_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_cta_v_path_idx\` ON \`__pages_v_blocks_cta_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_cta_v_cta_fields_cta_fields_banner_imag_idx\` ON \`__pages_v_blocks_cta_v\` (\`cta_fields_banner_image_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_card_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v_order_idx\` ON \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_card_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v_order_idx\` ON \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v_parent_id_idx\` ON \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_card_grid_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`card_grid_fields_settings_theme\` text,
+  	\`card_grid_fields_settings_background\` text,
+  	\`card_grid_fields_rich_text\` text,
+  	\`card_grid_fields_reveal_description\` integer,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_card_grid_v_order_idx\` ON \`__pages_v_blocks_card_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_card_grid_v_parent_id_idx\` ON \`__pages_v_blocks_card_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_card_grid_v_path_idx\` ON \`__pages_v_blocks_card_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`rich_text\` text,
+  	\`case_study_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`case_study_id\`) REFERENCES \`case_studies\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_case_study_cards_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v_order_idx\` ON \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v_parent_id_idx\` ON \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_cards_v_case_study_card_037_idx\` ON \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v\` (\`case_study_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_case_study_cards_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`case_study_card_fields_settings_theme\` text,
+  	\`case_study_card_fields_settings_background\` text,
+  	\`case_study_card_fields_pixels\` integer DEFAULT true,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_cards_v_order_idx\` ON \`__pages_v_blocks_case_study_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_cards_v_parent_id_idx\` ON \`__pages_v_blocks_case_study_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_cards_v_path_idx\` ON \`__pages_v_blocks_case_study_cards_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_case_studies_highlight_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`case_studies_highlight_fields_settings_theme\` text,
+  	\`case_studies_highlight_fields_settings_background\` text,
+  	\`case_studies_highlight_fields_rich_text\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_studies_highlight_v_order_idx\` ON \`__pages_v_blocks_case_studies_highlight_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_studies_highlight_v_parent_id_idx\` ON \`__pages_v_blocks_case_studies_highlight_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_studies_highlight_v_path_idx\` ON \`__pages_v_blocks_case_studies_highlight_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v_order_idx\` ON \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v_parent_id_idx\` ON \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_case_study_parallax_v_case_study__f08_idx\` ON \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`quote\` text,
+  	\`author\` text,
+  	\`logo_id\` integer,
+  	\`tab_label\` text,
+  	\`case_study_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`case_study_id\`) REFERENCES \`case_studies\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_case_study_parallax_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v_order_idx\` ON \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v_parent_id_idx\` ON \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_parallax_v_case_study_p_af8_idx\` ON \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\` (\`logo_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_case_study_parallax_v_case_study_p_a_1_idx\` ON \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\` (\`case_study_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_case_study_parallax_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`case_study_parallax_fields_settings_theme\` text,
+  	\`case_study_parallax_fields_settings_background\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_parallax_v_order_idx\` ON \`__pages_v_blocks_case_study_parallax_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_parallax_v_parent_id_idx\` ON \`__pages_v_blocks_case_study_parallax_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_case_study_parallax_v_path_idx\` ON \`__pages_v_blocks_case_study_parallax_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_code_feature_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v_order_idx\` ON \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`row\` numeric,
+  	\`label\` text,
+  	\`feature\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v_order_idx\` ON \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v_parent_id_idx\` ON \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`language\` text DEFAULT 'none',
+  	\`label\` text,
+  	\`code\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_code_feature_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v_order_idx\` ON \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v_parent_id_idx\` ON \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_code_feature_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`code_feature_fields_settings_theme\` text,
+  	\`code_feature_fields_settings_background\` text,
+  	\`code_feature_fields_force_dark_background\` integer,
+  	\`code_feature_fields_alignment\` text DEFAULT 'contentCode',
+  	\`code_feature_fields_heading\` text,
+  	\`code_feature_fields_rich_text\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_feature_v_order_idx\` ON \`__pages_v_blocks_code_feature_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_feature_v_parent_id_idx\` ON \`__pages_v_blocks_code_feature_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_feature_v_path_idx\` ON \`__pages_v_blocks_code_feature_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_content_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content_fields_settings_theme\` text,
+  	\`content_fields_settings_background\` text,
+  	\`content_fields_use_leading_header\` integer,
+  	\`content_fields_leading_header\` text,
+  	\`content_fields_layout\` text DEFAULT 'oneColumn',
+  	\`content_fields_column_one\` text,
+  	\`content_fields_column_two\` text,
+  	\`content_fields_column_three\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_v_order_idx\` ON \`__pages_v_blocks_content_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_v_parent_id_idx\` ON \`__pages_v_blocks_content_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_v_path_idx\` ON \`__pages_v_blocks_content_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_content_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v_order_idx\` ON \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_content_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v_order_idx\` ON \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v_parent_id_idx\` ON \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_content_grid_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content_grid_fields_settings_theme\` text,
+  	\`content_grid_fields_settings_background\` text,
+  	\`content_grid_fields_style\` text DEFAULT 'gridBelow',
+  	\`content_grid_fields_show_numbers\` integer,
+  	\`content_grid_fields_content\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_grid_v_order_idx\` ON \`__pages_v_blocks_content_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_grid_v_parent_id_idx\` ON \`__pages_v_blocks_content_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_content_grid_v_path_idx\` ON \`__pages_v_blocks_content_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`feature\` text,
+  	\`column_one_check\` integer,
+  	\`column_one\` text,
+  	\`column_two_check\` integer,
+  	\`column_two\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_comparison_table_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v_order_idx\` ON \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v_parent_id_idx\` ON \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_comparison_table_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`comparison_table_fields_settings_theme\` text,
+  	\`comparison_table_fields_settings_background\` text,
+  	\`comparison_table_fields_intro_content\` text,
+  	\`comparison_table_fields_style\` text DEFAULT 'default',
+  	\`comparison_table_fields_header_table_title\` text,
+  	\`comparison_table_fields_header_column_one_header\` text,
+  	\`comparison_table_fields_header_column_two_header\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_comparison_table_v_order_idx\` ON \`__pages_v_blocks_comparison_table_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_comparison_table_v_parent_id_idx\` ON \`__pages_v_blocks_comparison_table_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_comparison_table_v_path_idx\` ON \`__pages_v_blocks_comparison_table_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_form_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`form_fields_settings_theme\` text,
+  	\`form_fields_settings_background\` text,
+  	\`form_fields_rich_text\` text,
+  	\`form_fields_form_id\` integer,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`form_fields_form_id\`) REFERENCES \`forms\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_form_v_order_idx\` ON \`__pages_v_blocks_form_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_form_v_parent_id_idx\` ON \`__pages_v_blocks_form_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_form_v_path_idx\` ON \`__pages_v_blocks_form_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_form_v_form_fields_form_fields_form_idx\` ON \`__pages_v_blocks_form_v\` (\`form_fields_form_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`description\` text,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_hover_cards_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v_order_idx\` ON \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v_parent_id_idx\` ON \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_hover_cards_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`hover_cards_fields_settings_theme\` text,
+  	\`hover_cards_fields_settings_background\` text,
+  	\`hover_cards_fields_hide_background\` integer,
+  	\`hover_cards_fields_rich_text\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_cards_v_order_idx\` ON \`__pages_v_blocks_hover_cards_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_cards_v_parent_id_idx\` ON \`__pages_v_blocks_hover_cards_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_cards_v_path_idx\` ON \`__pages_v_blocks_hover_cards_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`text\` text,
+  	\`media_top_id\` integer,
+  	\`media_bottom_id\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_top_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`media_bottom_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_hover_highlights_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v_order_idx\` ON \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v_parent_id_idx\` ON \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2_idx\` ON \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\` (\`media_top_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_hover_highlights_v_hover_highlight_d_1_idx\` ON \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\` (\`media_bottom_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_hover_highlights_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`hover_highlights_fields_settings_theme\` text,
+  	\`hover_highlights_fields_settings_background\` text,
+  	\`hover_highlights_fields_before_highlights\` text,
+  	\`hover_highlights_fields_after_highlights\` text,
+  	\`hover_highlights_fields_link_type\` text DEFAULT 'reference',
+  	\`hover_highlights_fields_link_new_tab\` integer,
+  	\`hover_highlights_fields_link_url\` text,
+  	\`hover_highlights_fields_link_label\` text,
+  	\`hover_highlights_fields_link_custom_id\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_highlights_v_order_idx\` ON \`__pages_v_blocks_hover_highlights_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_highlights_v_parent_id_idx\` ON \`__pages_v_blocks_hover_highlights_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_hover_highlights_v_path_idx\` ON \`__pages_v_blocks_hover_highlights_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_link_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v_order_idx\` ON \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_link_grid_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_grid_fields_settings_theme\` text,
+  	\`link_grid_fields_settings_background\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_grid_v_order_idx\` ON \`__pages_v_blocks_link_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_grid_v_parent_id_idx\` ON \`__pages_v_blocks_link_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_link_grid_v_path_idx\` ON \`__pages_v_blocks_link_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`logo_media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_logo_grid_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v_order_idx\` ON \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v_parent_id_idx\` ON \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v_l_idx\` ON \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v\` (\`logo_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_logo_grid_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`logo_grid_fields_settings_theme\` text,
+  	\`logo_grid_fields_settings_background\` text,
+  	\`logo_grid_fields_rich_text\` text,
+  	\`logo_grid_fields_enable_link\` integer,
+  	\`logo_grid_fields_link_type\` text DEFAULT 'reference',
+  	\`logo_grid_fields_link_new_tab\` integer,
+  	\`logo_grid_fields_link_url\` text,
+  	\`logo_grid_fields_link_label\` text,
+  	\`logo_grid_fields_link_custom_id\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_logo_grid_v_order_idx\` ON \`__pages_v_blocks_logo_grid_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_logo_grid_v_parent_id_idx\` ON \`__pages_v_blocks_logo_grid_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_logo_grid_v_path_idx\` ON \`__pages_v_blocks_logo_grid_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_media_block_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`media_block_fields_settings_theme\` text,
+  	\`media_block_fields_settings_background\` text,
+  	\`media_block_fields_position\` text DEFAULT 'default',
+  	\`media_block_fields_media_id\` integer,
+  	\`media_block_fields_caption\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`media_block_fields_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_block_v_order_idx\` ON \`__pages_v_blocks_media_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_block_v_parent_id_idx\` ON \`__pages_v_blocks_media_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_block_v_path_idx\` ON \`__pages_v_blocks_media_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_block_v_media_block_fields_media__idx\` ON \`__pages_v_blocks_media_block_v\` (\`media_block_fields_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_media_content_v_media_content_fields_images_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`image_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_media_content_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_v_media_content_fields_images_v_order_idx\` ON \`___pages_v_blocks_media_content_v_media_content_fields_images_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_v_media_content_fields_images_v_parent_id_idx\` ON \`___pages_v_blocks_media_content_v_media_content_fields_images_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_v_media_content_fields_i_idx\` ON \`___pages_v_blocks_media_content_v_media_content_fields_images_v\` (\`image_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_media_content_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`media_content_fields_settings_theme\` text,
+  	\`media_content_fields_settings_background\` text,
+  	\`media_content_fields_alignment\` text DEFAULT 'contentMedia',
+  	\`media_content_fields_media_width\` text DEFAULT 'stretch',
+  	\`media_content_fields_rich_text\` text,
+  	\`media_content_fields_enable_link\` integer,
+  	\`media_content_fields_link_type\` text DEFAULT 'reference',
+  	\`media_content_fields_link_new_tab\` integer,
+  	\`media_content_fields_link_url\` text,
+  	\`media_content_fields_link_label\` text,
+  	\`media_content_fields_link_custom_id\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_v_order_idx\` ON \`__pages_v_blocks_media_content_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_v_parent_id_idx\` ON \`__pages_v_blocks_media_content_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_v_path_idx\` ON \`__pages_v_blocks_media_content_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`position\` text DEFAULT 'normal',
+  	\`background\` text DEFAULT 'none',
+  	\`media_label\` text,
+  	\`media_description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_media_content_accordion_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v_order_idx\` ON \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v_parent_id_idx\` ON \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_media_content_accordion_v_media_co_c20_idx\` ON \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_media_content_accordion_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`media_content_accordion_fields_settings_theme\` text,
+  	\`media_content_accordion_fields_settings_background\` text,
+  	\`media_content_accordion_fields_alignment\` text DEFAULT 'contentMedia',
+  	\`media_content_accordion_fields_leader\` text,
+  	\`media_content_accordion_fields_heading\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_accordion_v_order_idx\` ON \`__pages_v_blocks_media_content_accordion_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_accordion_v_parent_id_idx\` ON \`__pages_v_blocks_media_content_accordion_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_content_accordion_v_path_idx\` ON \`__pages_v_blocks_media_content_accordion_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`icon\` text,
+  	\`feature\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___pages_v_blocks_pricing_v_pricing_fields_plans_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v_order_idx\` ON \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v_parent_id_idx\` ON \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_pricing_v_pricing_fields_plans_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`name\` text,
+  	\`has_price\` integer,
+  	\`enable_create_payload\` integer,
+  	\`price\` text,
+  	\`title\` text,
+  	\`description\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_pricing_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_pricing_v_pricing_fields_plans_v_order_idx\` ON \`___pages_v_blocks_pricing_v_pricing_fields_plans_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_pricing_v_pricing_fields_plans_v_parent_id_idx\` ON \`___pages_v_blocks_pricing_v_pricing_fields_plans_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_pricing_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`pricing_fields_settings_theme\` text,
+  	\`pricing_fields_settings_background\` text,
+  	\`pricing_fields_disclaimer\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_pricing_v_order_idx\` ON \`__pages_v_blocks_pricing_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_pricing_v_parent_id_idx\` ON \`__pages_v_blocks_pricing_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_pricing_v_path_idx\` ON \`__pages_v_blocks_pricing_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_reusable_content_block_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`reusable_content_block_fields_settings_theme\` text,
+  	\`reusable_content_block_fields_settings_background\` text,
+  	\`reusable_content_block_fields_reusable_content_id\` integer,
+  	\`reusable_content_block_fields_custom_id\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`reusable_content_block_fields_reusable_content_id\`) REFERENCES \`reusable_content\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_reusable_content_block_v_order_idx\` ON \`__pages_v_blocks_reusable_content_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_reusable_content_block_v_parent_id_idx\` ON \`__pages_v_blocks_reusable_content_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_reusable_content_block_v_path_idx\` ON \`__pages_v_blocks_reusable_content_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_reusable_content_block_v_reusable_conte_idx\` ON \`__pages_v_blocks_reusable_content_block_v\` (\`reusable_content_block_fields_reusable_content_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_slider_v_slider_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`link_appearance\` text DEFAULT 'default',
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_slider_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_slider_v_slider_fields_links_v_order_idx\` ON \`___pages_v_blocks_slider_v_slider_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_slider_v_slider_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_slider_v_slider_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`quote\` text,
+  	\`author\` text,
+  	\`role\` text,
+  	\`logo_id\` integer,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`logo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_slider_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v_order_idx\` ON \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v_parent_id_idx\` ON \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v__idx\` ON \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v\` (\`logo_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_slider_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`slider_fields_settings_theme\` text,
+  	\`slider_fields_settings_background\` text,
+  	\`slider_fields_intro_content\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_slider_v_order_idx\` ON \`__pages_v_blocks_slider_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_slider_v_parent_id_idx\` ON \`__pages_v_blocks_slider_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_slider_v_path_idx\` ON \`__pages_v_blocks_slider_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_statement_v_statement_fields_links_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_statement_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_statement_v_statement_fields_links_v_order_idx\` ON \`___pages_v_blocks_statement_v_statement_fields_links_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_statement_v_statement_fields_links_v_parent_id_idx\` ON \`___pages_v_blocks_statement_v_statement_fields_links_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_statement_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`statement_fields_settings_theme\` text,
+  	\`statement_fields_settings_background\` text,
+  	\`statement_fields_rich_text\` text,
+  	\`statement_fields_asset_type\` text DEFAULT 'media',
+  	\`statement_fields_media_id\` integer,
+  	\`statement_fields_code\` text,
+  	\`statement_fields_media_width\` text DEFAULT 'medium',
+  	\`statement_fields_background_glow\` text DEFAULT 'none',
+  	\`statement_fields_asset_caption\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`statement_fields_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_statement_v_order_idx\` ON \`__pages_v_blocks_statement_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_statement_v_parent_id_idx\` ON \`__pages_v_blocks_statement_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_statement_v_path_idx\` ON \`__pages_v_blocks_statement_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_statement_v_statement_fields_statement__idx\` ON \`__pages_v_blocks_statement_v\` (\`statement_fields_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_steps_v_steps_fields_steps_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`content\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_steps_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_steps_v_steps_fields_steps_v_order_idx\` ON \`___pages_v_blocks_steps_v_steps_fields_steps_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_steps_v_steps_fields_steps_v_parent_id_idx\` ON \`___pages_v_blocks_steps_v_steps_fields_steps_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_steps_v_steps_fields_steps_v_media_idx\` ON \`___pages_v_blocks_steps_v_steps_fields_steps_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_steps_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`steps_fields_settings_theme\` text,
+  	\`steps_fields_settings_background\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_steps_v_order_idx\` ON \`__pages_v_blocks_steps_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_steps_v_parent_id_idx\` ON \`__pages_v_blocks_steps_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_steps_v_path_idx\` ON \`__pages_v_blocks_steps_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`row\` numeric,
+  	\`label\` text,
+  	\`feature\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v_order_idx\` ON \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v_parent_id_idx\` ON \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`rich_text\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`type\` text,
+  	\`code\` text,
+  	\`media_id\` integer,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_sticky_highlights_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v_order_idx\` ON \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v_parent_id_idx\` ON \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e19_idx\` ON \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_sticky_highlights_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`sticky_highlights_fields_settings_theme\` text,
+  	\`sticky_highlights_fields_settings_background\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_sticky_highlights_v_order_idx\` ON \`__pages_v_blocks_sticky_highlights_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_sticky_highlights_v_parent_id_idx\` ON \`__pages_v_blocks_sticky_highlights_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_sticky_highlights_v_path_idx\` ON \`__pages_v_blocks_sticky_highlights_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_code_example_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -2646,10 +4119,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_28_order_idx\` ON \`__v_28\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_28_parent_id_idx\` ON \`__v_28\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_28_path_idx\` ON \`__v_28\` (\`_path\`);`)
-  await db.run(sql`CREATE TABLE \`__v_29\` (
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_example_block_v_order_idx\` ON \`__pages_v_blocks_code_example_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_example_block_v_parent_id_idx\` ON \`__pages_v_blocks_code_example_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_code_example_block_v_path_idx\` ON \`__pages_v_blocks_code_example_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_media_example_block_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -2661,11 +4134,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_29_order_idx\` ON \`__v_29\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_29_parent_id_idx\` ON \`__v_29\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_29_path_idx\` ON \`__v_29\` (\`_path\`);`)
-  await db.run(sql`CREATE INDEX \`__v_29_media_idx\` ON \`__v_29\` (\`media_id\`);`)
-  await db.run(sql`CREATE TABLE \`__v_27\` (
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_example_block_v_order_idx\` ON \`__pages_v_blocks_media_example_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_example_block_v_parent_id_idx\` ON \`__pages_v_blocks_media_example_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_example_block_v_path_idx\` ON \`__pages_v_blocks_media_example_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_media_example_block_v_media_idx\` ON \`__pages_v_blocks_media_example_block_v\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`___pages_v_blocks_example_tabs_v_tabs_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`label\` text,
+  	\`content\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__pages_v_blocks_example_tabs_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_example_tabs_v_tabs_v_order_idx\` ON \`___pages_v_blocks_example_tabs_v_tabs_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___pages_v_blocks_example_tabs_v_tabs_v_parent_id_idx\` ON \`___pages_v_blocks_example_tabs_v_tabs_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__pages_v_blocks_example_tabs_v\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
@@ -2676,9 +4161,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`__v_27_order_idx\` ON \`__v_27\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`__v_27_parent_id_idx\` ON \`__v_27\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`__v_27_path_idx\` ON \`__v_27\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_example_tabs_v_order_idx\` ON \`__pages_v_blocks_example_tabs_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_example_tabs_v_parent_id_idx\` ON \`__pages_v_blocks_example_tabs_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__pages_v_blocks_example_tabs_v_path_idx\` ON \`__pages_v_blocks_example_tabs_v\` (\`_path\`);`)
   await db.run(sql`CREATE TABLE \`_pages_v_version_breadcrumbs\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
@@ -2976,6 +4461,131 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`posts_rels_case_studies_id_idx\` ON \`posts_rels\` (\`case_studies_id\`);`)
   await db.run(sql`CREATE INDEX \`posts_rels_docs_id_idx\` ON \`posts_rels\` (\`docs_id\`);`)
   await db.run(sql`CREATE INDEX \`posts_rels_users_id_idx\` ON \`posts_rels\` (\`users_id\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_banner_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`banner_fields_settings_theme\` text,
+  	\`banner_fields_settings_background\` text,
+  	\`banner_fields_type\` text DEFAULT 'default',
+  	\`banner_fields_add_checkmark\` integer,
+  	\`banner_fields_content\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_banner_v_order_idx\` ON \`__posts_v_blocks_banner_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_banner_v_parent_id_idx\` ON \`__posts_v_blocks_banner_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_banner_v_path_idx\` ON \`__posts_v_blocks_banner_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_blog_content_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`blog_content_fields_settings_theme\` text,
+  	\`blog_content_fields_settings_background\` text,
+  	\`blog_content_fields_rich_text\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_content_v_order_idx\` ON \`__posts_v_blocks_blog_content_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_content_v_parent_id_idx\` ON \`__posts_v_blocks_blog_content_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_content_v_path_idx\` ON \`__posts_v_blocks_blog_content_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`___posts_v_blocks_code_v_code_fields_code_blips_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`row\` numeric,
+  	\`label\` text,
+  	\`feature\` text,
+  	\`enable_link\` integer,
+  	\`link_type\` text DEFAULT 'reference',
+  	\`link_new_tab\` integer,
+  	\`link_url\` text,
+  	\`link_label\` text,
+  	\`link_custom_id\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`__posts_v_blocks_code_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`___posts_v_blocks_code_v_code_fields_code_blips_v_order_idx\` ON \`___posts_v_blocks_code_v_code_fields_code_blips_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`___posts_v_blocks_code_v_code_fields_code_blips_v_parent_id_idx\` ON \`___posts_v_blocks_code_v_code_fields_code_blips_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_code_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`code_fields_settings_theme\` text,
+  	\`code_fields_settings_background\` text,
+  	\`code_fields_language\` text DEFAULT 'none',
+  	\`code_fields_code\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_code_v_order_idx\` ON \`__posts_v_blocks_code_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_code_v_parent_id_idx\` ON \`__posts_v_blocks_code_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_code_v_path_idx\` ON \`__posts_v_blocks_code_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_blog_markdown_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`blog_markdown_fields_settings_theme\` text,
+  	\`blog_markdown_fields_settings_background\` text,
+  	\`blog_markdown_fields_markdown\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_markdown_v_order_idx\` ON \`__posts_v_blocks_blog_markdown_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_markdown_v_parent_id_idx\` ON \`__posts_v_blocks_blog_markdown_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_blog_markdown_v_path_idx\` ON \`__posts_v_blocks_blog_markdown_v\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_media_block_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`media_block_fields_settings_theme\` text,
+  	\`media_block_fields_settings_background\` text,
+  	\`media_block_fields_position\` text DEFAULT 'default',
+  	\`media_block_fields_media_id\` integer,
+  	\`media_block_fields_caption\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`media_block_fields_media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_media_block_v_order_idx\` ON \`__posts_v_blocks_media_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_media_block_v_parent_id_idx\` ON \`__posts_v_blocks_media_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_media_block_v_path_idx\` ON \`__posts_v_blocks_media_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_media_block_v_media_block_fields_media__idx\` ON \`__posts_v_blocks_media_block_v\` (\`media_block_fields_media_id\`);`)
+  await db.run(sql`CREATE TABLE \`__posts_v_blocks_reusable_content_block_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`reusable_content_block_fields_settings_theme\` text,
+  	\`reusable_content_block_fields_settings_background\` text,
+  	\`reusable_content_block_fields_reusable_content_id\` integer,
+  	\`reusable_content_block_fields_custom_id\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`reusable_content_block_fields_reusable_content_id\`) REFERENCES \`reusable_content\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_reusable_content_block_v_order_idx\` ON \`__posts_v_blocks_reusable_content_block_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_reusable_content_block_v_parent_id_idx\` ON \`__posts_v_blocks_reusable_content_block_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_reusable_content_block_v_path_idx\` ON \`__posts_v_blocks_reusable_content_block_v\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`__posts_v_blocks_reusable_content_block_v_reusable_conte_idx\` ON \`__posts_v_blocks_reusable_content_block_v\` (\`reusable_content_block_fields_reusable_content_id\`);`)
   await db.run(sql`CREATE TABLE \`_posts_v\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`parent_id\` integer,
@@ -3039,11 +4649,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	\`order\` integer,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,
+  	\`pages_id\` integer,
   	\`posts_id\` integer,
+  	\`case_studies_id\` integer,
   	\`docs_id\` integer,
   	\`users_id\` integer,
   	FOREIGN KEY (\`parent_id\`) REFERENCES \`_posts_v\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`pages_id\`) REFERENCES \`pages\`(\`id\`) ON UPDATE no action ON DELETE cascade,
   	FOREIGN KEY (\`posts_id\`) REFERENCES \`posts\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`case_studies_id\`) REFERENCES \`case_studies\`(\`id\`) ON UPDATE no action ON DELETE cascade,
   	FOREIGN KEY (\`docs_id\`) REFERENCES \`docs\`(\`id\`) ON UPDATE no action ON DELETE cascade,
   	FOREIGN KEY (\`users_id\`) REFERENCES \`users\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
@@ -3051,7 +4665,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`_posts_v_rels_order_idx\` ON \`_posts_v_rels\` (\`order\`);`)
   await db.run(sql`CREATE INDEX \`_posts_v_rels_parent_idx\` ON \`_posts_v_rels\` (\`parent_id\`);`)
   await db.run(sql`CREATE INDEX \`_posts_v_rels_path_idx\` ON \`_posts_v_rels\` (\`path\`);`)
+  await db.run(sql`CREATE INDEX \`_posts_v_rels_pages_id_idx\` ON \`_posts_v_rels\` (\`pages_id\`);`)
   await db.run(sql`CREATE INDEX \`_posts_v_rels_posts_id_idx\` ON \`_posts_v_rels\` (\`posts_id\`);`)
+  await db.run(sql`CREATE INDEX \`_posts_v_rels_case_studies_id_idx\` ON \`_posts_v_rels\` (\`case_studies_id\`);`)
   await db.run(sql`CREATE INDEX \`_posts_v_rels_docs_id_idx\` ON \`_posts_v_rels\` (\`docs_id\`);`)
   await db.run(sql`CREATE INDEX \`_posts_v_rels_users_id_idx\` ON \`_posts_v_rels\` (\`users_id\`);`)
   await db.run(sql`CREATE TABLE \`categories\` (
@@ -4183,6 +5799,44 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`partners_rels_specialties_id_idx\` ON \`partners_rels\` (\`specialties_id\`);`)
   await db.run(sql`CREATE INDEX \`partners_rels_budgets_id_idx\` ON \`partners_rels\` (\`budgets_id\`);`)
   await db.run(sql`CREATE INDEX \`partners_rels_industries_id_idx\` ON \`partners_rels\` (\`industries_id\`);`)
+  await db.run(sql`CREATE TABLE \`__partners_v_version_content_contributions_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`type\` text,
+  	\`repo\` text DEFAULT 'payload',
+  	\`number\` numeric,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_partners_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_content_contributions_v_order_idx\` ON \`__partners_v_version_content_contributions_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_content_contributions_v_parent_id_idx\` ON \`__partners_v_version_content_contributions_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__partners_v_version_content_projects_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`year\` numeric,
+  	\`name\` text,
+  	\`link\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_partners_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_content_projects_v_order_idx\` ON \`__partners_v_version_content_projects_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_content_projects_v_parent_id_idx\` ON \`__partners_v_version_content_projects_v\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE TABLE \`__partners_v_version_social_v\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`platform\` text,
+  	\`url\` text,
+  	\`_uuid\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_partners_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_social_v_order_idx\` ON \`__partners_v_version_social_v\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`__partners_v_version_social_v_parent_id_idx\` ON \`__partners_v_version_social_v\` (\`_parent_id\`);`)
   await db.run(sql`CREATE TABLE \`_partners_v\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`parent_id\` integer,
@@ -5889,32 +7543,59 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`DROP TABLE \`case_studies_blocks_example_tabs\`;`)
   await db.run(sql`DROP TABLE \`case_studies\`;`)
   await db.run(sql`DROP TABLE \`case_studies_rels\`;`)
-  await db.run(sql`DROP TABLE \`__v\`;`)
-  await db.run(sql`DROP TABLE \`__v_2\`;`)
-  await db.run(sql`DROP TABLE \`__v_3\`;`)
-  await db.run(sql`DROP TABLE \`__v_4\`;`)
-  await db.run(sql`DROP TABLE \`__v_5\`;`)
-  await db.run(sql`DROP TABLE \`__v_6\`;`)
-  await db.run(sql`DROP TABLE \`__v_7\`;`)
-  await db.run(sql`DROP TABLE \`__v_8\`;`)
-  await db.run(sql`DROP TABLE \`__v_9\`;`)
-  await db.run(sql`DROP TABLE \`__v_10\`;`)
-  await db.run(sql`DROP TABLE \`__v_11\`;`)
-  await db.run(sql`DROP TABLE \`__v_12\`;`)
-  await db.run(sql`DROP TABLE \`__v_13\`;`)
-  await db.run(sql`DROP TABLE \`__v_14\`;`)
-  await db.run(sql`DROP TABLE \`__v_15\`;`)
-  await db.run(sql`DROP TABLE \`__v_16\`;`)
-  await db.run(sql`DROP TABLE \`__v_17\`;`)
-  await db.run(sql`DROP TABLE \`__v_18\`;`)
-  await db.run(sql`DROP TABLE \`__v_19\`;`)
-  await db.run(sql`DROP TABLE \`__v_20\`;`)
-  await db.run(sql`DROP TABLE \`__v_21\`;`)
-  await db.run(sql`DROP TABLE \`__v_22\`;`)
-  await db.run(sql`DROP TABLE \`__v_23\`;`)
-  await db.run(sql`DROP TABLE \`__v_25\`;`)
-  await db.run(sql`DROP TABLE \`__v_26\`;`)
-  await db.run(sql`DROP TABLE \`__v_24\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_callout_v_callout_fields_images_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_callout_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_cta_v_cta_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_cta_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_card_grid_v_card_grid_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_card_grid_v_card_grid_fields_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_card_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_case_study_cards_v_case_stu_af4d28f8_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_case_study_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_case_studies_highlight_v\`;`)
+  await db.run(sql`DROP TABLE \`____case_studies_v_blocks_case_study_parallax_v_case_446b719b_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_case_study_parallax_v_case__f50eb0e4_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_case_study_parallax_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_code_feature_v_code_feature_01290f2e_v\`;`)
+  await db.run(sql`DROP TABLE \`____case_studies_v_blocks_code_feature_v_code_featur_3160b52d_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_code_feature_v_code_feature_cbc48710_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_code_feature_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_content_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_content_grid_v_content_grid_48a835a4_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_content_grid_v_content_grid_d6a8c3cc_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_content_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_form_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_hover_cards_v_hover_cards_f_0ee9b818_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_hover_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_hover_highlights_v_hover_hi_ff16421d_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_hover_highlights_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_link_grid_v_link_grid_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_link_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_logo_grid_v_logo_grid_fields_logos_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_logo_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_media_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_media_content_v_media_conte_da2026a6_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_media_content_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_media_content_accordion_v_m_c12bff61_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_media_content_accordion_v\`;`)
+  await db.run(sql`DROP TABLE \`____case_studies_v_blocks_pricing_v_pricing_fields_p_11ef1359_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_pricing_v_pricing_fields_plans_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_pricing_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_reusable_content_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_slider_v_slider_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_slider_v_slider_fields_quote_slides_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_slider_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_statement_v_statement_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_statement_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_steps_v_steps_fields_steps_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_steps_v\`;`)
+  await db.run(sql`DROP TABLE \`____case_studies_v_blocks_sticky_highlights_v_sticky_473b4e7b_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_sticky_highlights_v_sticky__3b56905e_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_sticky_highlights_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_code_example_block_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_media_example_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___case_studies_v_blocks_example_tabs_v_tabs_v\`;`)
+  await db.run(sql`DROP TABLE \`__case_studies_v_blocks_example_tabs_v\`;`)
   await db.run(sql`DROP TABLE \`_case_studies_v\`;`)
   await db.run(sql`DROP TABLE \`_case_studies_v_rels\`;`)
   await db.run(sql`DROP TABLE \`community_help\`;`)
@@ -5989,9 +7670,70 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`DROP TABLE \`pages_breadcrumbs\`;`)
   await db.run(sql`DROP TABLE \`pages\`;`)
   await db.run(sql`DROP TABLE \`pages_rels\`;`)
-  await db.run(sql`DROP TABLE \`__v_28\`;`)
-  await db.run(sql`DROP TABLE \`__v_29\`;`)
-  await db.run(sql`DROP TABLE \`__v_27\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_breadcrumbs_bar_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_livestream_guests_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_primary_buttons_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_link_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_command_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_secondary_buttons_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_images_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_version_hero_logos_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_callout_v_callout_fields_images_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_callout_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_cta_v_cta_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_cta_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_card_grid_v_card_grid_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_card_grid_v_card_grid_fields_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_card_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_case_study_cards_v_case_study_card_037c73f3_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_case_study_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_case_studies_highlight_v\`;`)
+  await db.run(sql`DROP TABLE \`____pages_v_blocks_case_study_parallax_v_case_study__f085c492_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_case_study_parallax_v_case_study_p_af885996_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_case_study_parallax_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_code_feature_v_code_feature_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`____pages_v_blocks_code_feature_v_code_feature_field_0f85e58c_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_code_feature_v_code_feature_fields_e5e7970d_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_code_feature_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_content_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_content_grid_v_content_grid_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_content_grid_v_content_grid_fields_cells_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_content_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_comparison_table_v_comparison_tabl_ff6a243a_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_comparison_table_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_form_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_hover_cards_v_hover_cards_fields_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_hover_cards_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_hover_highlights_v_hover_highlight_db2d2e93_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_hover_highlights_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_link_grid_v_link_grid_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_link_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_logo_grid_v_logo_grid_fields_logos_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_logo_grid_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_media_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_media_content_v_media_content_fields_images_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_media_content_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_media_content_accordion_v_media_co_c20f225a_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_media_content_accordion_v\`;`)
+  await db.run(sql`DROP TABLE \`____pages_v_blocks_pricing_v_pricing_fields_plans_v_features_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_pricing_v_pricing_fields_plans_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_pricing_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_reusable_content_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_slider_v_slider_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_slider_v_slider_fields_quote_slides_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_slider_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_statement_v_statement_fields_links_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_statement_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_steps_v_steps_fields_steps_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_steps_v\`;`)
+  await db.run(sql`DROP TABLE \`____pages_v_blocks_sticky_highlights_v_sticky_highli_805b1962_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_sticky_highlights_v_sticky_highlig_e192bd38_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_sticky_highlights_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_code_example_block_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_media_example_block_v\`;`)
+  await db.run(sql`DROP TABLE \`___pages_v_blocks_example_tabs_v_tabs_v\`;`)
+  await db.run(sql`DROP TABLE \`__pages_v_blocks_example_tabs_v\`;`)
   await db.run(sql`DROP TABLE \`_pages_v_version_breadcrumbs\`;`)
   await db.run(sql`DROP TABLE \`_pages_v\`;`)
   await db.run(sql`DROP TABLE \`_pages_v_rels\`;`)
@@ -6005,6 +7747,13 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`DROP TABLE \`posts\`;`)
   await db.run(sql`DROP TABLE \`posts_texts\`;`)
   await db.run(sql`DROP TABLE \`posts_rels\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_banner_v\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_blog_content_v\`;`)
+  await db.run(sql`DROP TABLE \`___posts_v_blocks_code_v_code_fields_code_blips_v\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_code_v\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_blog_markdown_v\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_media_block_v\`;`)
+  await db.run(sql`DROP TABLE \`__posts_v_blocks_reusable_content_block_v\`;`)
   await db.run(sql`DROP TABLE \`_posts_v\`;`)
   await db.run(sql`DROP TABLE \`_posts_v_texts\`;`)
   await db.run(sql`DROP TABLE \`_posts_v_rels\`;`)
@@ -6078,6 +7827,9 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`DROP TABLE \`partners_social\`;`)
   await db.run(sql`DROP TABLE \`partners\`;`)
   await db.run(sql`DROP TABLE \`partners_rels\`;`)
+  await db.run(sql`DROP TABLE \`__partners_v_version_content_contributions_v\`;`)
+  await db.run(sql`DROP TABLE \`__partners_v_version_content_projects_v\`;`)
+  await db.run(sql`DROP TABLE \`__partners_v_version_social_v\`;`)
   await db.run(sql`DROP TABLE \`_partners_v\`;`)
   await db.run(sql`DROP TABLE \`_partners_v_rels\`;`)
   await db.run(sql`DROP TABLE \`industries\`;`)
