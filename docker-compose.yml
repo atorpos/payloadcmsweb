@@ -1,0 +1,29 @@
+# Optional local MongoDB for development.
+#
+#   docker compose up -d
+#
+# Runs as a single-node replica set so that Payload can use transactions, which
+# is what a deployed Atlas cluster gives you. A plain standalone `mongod` also
+# works — Payload detects that transactions are unavailable and falls back to
+# non-transactional writes — but running a replica set keeps local behaviour
+# closer to production.
+services:
+  mongo:
+    image: mongo:7
+    command: ['--replSet', 'rs0', '--bind_ip_all']
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Doubles as the replica set initiator: the first probe promotes the node
+      # to a primary, and every probe after that just reports its status.
+      test: >
+        mongosh --quiet --eval "try { rs.status().ok } catch { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: '127.0.0.1:27017' }] }).ok }"
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  mongo-data:

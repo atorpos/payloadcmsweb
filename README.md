@@ -32,8 +32,43 @@ To get started with this repo locally, follow the steps below:
 - `pnpm i`
 - Run `cp .env.example .env` to create an `.env` file
 - Fill out the values within your new `.env`, corresponding to your own environment
+- Start a MongoDB instance and point `DATABASE_URI` at it — see [Database](#database)
 - Run `pnpm dev`
 - Bam
+
+### Database
+
+This site runs on MongoDB. Any instance will do — Atlas, a local `mongod`, or the
+one in `docker-compose.yml`:
+
+```sh
+docker compose up -d
+```
+
+That starts MongoDB on port `27017` as a single-node replica set, so Payload can
+use transactions the same way it does against a deployed Atlas cluster. Point
+`DATABASE_URI` at it:
+
+```env
+DATABASE_URI=mongodb://127.0.0.1:27017/payload-website?replicaSet=rs0
+```
+
+A standalone `mongod` works too — drop the `?replicaSet=rs0` and Payload will
+detect that transactions are unavailable and fall back to non-transactional
+writes. Prefer `127.0.0.1` over `localhost` in the URI: Node resolves `localhost`
+to `::1` first, which fails against a `mongod` listening only on IPv4.
+
+#### Migrations
+
+`pnpm build` runs migrations before building. To run them on their own:
+
+```sh
+pnpm migrate         # apply pending migrations
+pnpm migrate:status  # show which migrations have run
+```
+
+The one migration in `src/migrations` converts Payload v2 relationships to the v3
+shape, so it no-ops against a database this version of Payload created itself.
 
 ### Hosts file
 

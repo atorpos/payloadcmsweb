@@ -16,6 +16,7 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import link from '@root/fields/link'
 import { LabelFeature } from '@root/fields/richText/features/label/server'
 import { LargeBodyFeature } from '@root/fields/richText/features/largeBody/server'
+import { getDatabaseURI } from '@utilities/getDatabaseURI'
 import { googleAnalytics } from '@zubricks/plugin-google-analytics'
 import { revalidateTag } from 'next/cache'
 import nodemailerSendgrid from 'nodemailer-sendgrid'
@@ -313,7 +314,15 @@ export default buildConfig({
     'https://discord.com/api',
   ].filter(Boolean),
   db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
+    /**
+     * `payload migrate` rewrites documents inside a transaction, which times out
+     * acquiring locks while Mongoose is still building indexes in the background.
+     * The migrate scripts opt in so index builds are finished before migrations
+     * start; ordinary server boots leave them in the background, as Payload
+     * recommends, so startup stays fast.
+     */
+    ensureIndexes: process.env.PAYLOAD_ENSURE_INDEXES === 'true',
+    url: getDatabaseURI(),
   }),
   defaultDepth: 1,
   editor: lexicalEditor({
