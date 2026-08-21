@@ -10,7 +10,6 @@ interface Args {
 
 export const themeField: (width?: number) => Field = (width) => ({
   name: 'theme',
-  dbName: 't',
   type: 'select',
   admin: {
     description: 'Leave blank for system default',
@@ -34,7 +33,6 @@ export const backgroundField: Field = {
   admin: {
     width: '50%',
   },
-  dbName: 'bg',
   options: [
     {
       label: 'Solid',
@@ -67,7 +65,6 @@ export const blockFields = ({ name, fields, overrides }: Args): Field =>
           padding: 0,
         },
       },
-      dbName: 'f',
       fields: [
         {
           type: 'collapsible',
