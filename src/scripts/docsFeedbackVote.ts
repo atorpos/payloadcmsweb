@@ -15,15 +15,61 @@ const docsFeedbackVote: PayloadHandler = async (req) => {
       )
     }
 
-    // Atomic upsert + increment so concurrent votes don't clobber each other.
-    // Goes through the underlying mongoose model directly (bypasses hooks, which
-    // is fine for a counter).
-    const model = (req.payload.db as any).collections['docs-feedback']
-    await model.findOneAndUpdate(
-      { path },
-      { $inc: { [vote]: 1 }, $setOnInsert: { path } },
-      { new: true, upsert: true },
-    )
+    // Increment through the Local API so this works on any database adapter. `path` is unique, so
+    // a concurrent create loses the race and is retried as an update below.
+    const existing = await req.payload.find({
+      collection: 'docs-feedback',
+      depth: 0,
+      limit: 1,
+      overrideAccess: true,
+      pagination: false,
+      where: { path: { equals: path } },
+    })
+
+    const current = existing.docs[0]
+
+    if (current) {
+      await req.payload.update({
+        id: current.id,
+        collection: 'docs-feedback',
+        data: { [vote]: (current[vote] ?? 0) + 1 },
+        depth: 0,
+        overrideAccess: true,
+      })
+    } else {
+      try {
+        await req.payload.create({
+          collection: 'docs-feedback',
+          data: { path, helpful: 0, notHelpful: 0, [vote]: 1 },
+          depth: 0,
+          overrideAccess: true,
+        })
+      } catch {
+        // Another request created the row first — fall back to incrementing it.
+        const created = await req.payload.find({
+          collection: 'docs-feedback',
+          depth: 0,
+          limit: 1,
+          overrideAccess: true,
+          pagination: false,
+          where: { path: { equals: path } },
+        })
+
+        const doc = created.docs[0]
+
+        if (!doc) {
+          throw new Error(`Unable to record vote for "${path}"`)
+        }
+
+        await req.payload.update({
+          id: doc.id,
+          collection: 'docs-feedback',
+          data: { [vote]: (doc[vote] ?? 0) + 1 },
+          depth: 0,
+          overrideAccess: true,
+        })
+      }
+    }
 
     return Response.json({ success: true }, { status: 200 })
   } catch (error: unknown) {

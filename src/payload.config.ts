@@ -23,6 +23,8 @@ import path from 'path'
 import { buildConfig, type TextField } from 'payload'
 import { fileURLToPath } from 'url'
 
+import { shortenBlocks, shortenEntities } from './utilities/dbIdentifiers'
+
 import { BlogContent } from './blocks/BlogContent'
 import { BlogMarkdown } from './blocks/BlogMarkdown'
 import { Callout } from './blocks/Callout'
@@ -115,7 +117,7 @@ export default buildConfig({
       baseDir: dirname,
     },
   },
-  blocks: [
+  blocks: shortenBlocks([
     BlogContent,
     BlogMarkdown,
     CodeExampleBlock,
@@ -289,8 +291,8 @@ export default buildConfig({
     BannerBlock,
     CodeBlock,
     Code,
-  ],
-  collections: [
+  ]),
+  collections: shortenEntities([
     CaseStudies,
     CommunityHelp,
     Docs,
@@ -306,7 +308,7 @@ export default buildConfig({
     Specialties,
     Regions,
     Budgets,
-  ],
+  ]),
   cors: [
     process.env.PAYLOAD_PUBLIC_APP_URL || '',
     'https://payloadcms.com',
@@ -410,7 +412,7 @@ export default buildConfig({
       path: '/create-release-post-from-admin',
     },
   ],
-  globals: [Footer, MainMenu, GetStarted, PartnerProgram, TopBar],
+  globals: shortenEntities([Footer, MainMenu, GetStarted, PartnerProgram, TopBar]),
   graphQL: {
     disablePlaygroundInProduction: false,
   },
