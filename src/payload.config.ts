@@ -314,8 +314,8 @@ export default buildConfig({
   ].filter(Boolean),
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URI || '',
-    }
+      url: process.env.DATABASE_URI || 'file:./payload.db',
+    },
   }),
   defaultDepth: 1,
   editor: lexicalEditor({

@@ -156,5 +156,5 @@ const link: LinkType = ({ appearances, disableLabel = false, overrides = {} } = 
 
   return deepMerge(linkResult, overrides)
 }
-
+// eslint-disable-next-line no-restricted-exports
 export default link
